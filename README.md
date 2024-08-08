@@ -84,7 +84,7 @@ if (!result.valid) {
 }
 ```
 
-## Scope manager
+## Scope Manager
 By default, scopes are handled the same as transient dependencies. After resolving a dependency using `IOCManager#resolve`, you can call `IOCManager#registerScope` with the resolved class instance and a method to resolve dependencies. This method will be used to resolve dependencies for the class instance.
 
 Here is a really simple example of a scope manager. This manager does not store the class instances in the scope. For a full example, take a look at the Scope Manager example for Sveltekit.
@@ -99,11 +99,15 @@ function resolve<T>(dependency: string): T {
 }
 ```
 
+In most cases, a Scope Manager should follow the following steps.
+
+<img src="./assets/flowchart-scope-manager-on-req.png" alt="Flowchart of a Scope Manager" height="250" />
+
 ### Example
 <details>
-  <summary>Example scope manager for Sveltekit</summary>
+  <summary>Example Scope Manager for Sveltekit</summary>
 
-  This is an example of a scope manager for Sveltekit. This manager will create a new instance of the class for each request.
+  This is an example of a Scope Manager for Sveltekit. This manager will create a new instance of the class for each request.
 
   **hooks.server.ts**
   ```typescript
@@ -161,9 +165,15 @@ function resolve<T>(dependency: string): T {
     }
   ```
 
+  This Scope Manager follows the following steps.
+
+  <img src="./assets/flowchart-scope-manager-injection.png" alt="Flowchart of an example Scope Manager" height="350" />
+
 </details>
 
 ## API
+<img src="./assets/uml.png" alt="UML of the project" height="400" />
+
 ### Types
 - **`Constructor<T = {}>`** <br>
   Base type for a class constructor that results in a class instance.
@@ -179,11 +189,14 @@ function resolve<T>(dependency: string): T {
     Array of possible error messages if the dependency references are not valid.
 
 ### IOCContainer
+> **Note:** The only methods you would use are `registerScope`, `cleanScope` and `testDependencyReferences`. The other methods should only be used internally.
+> _All methods are static_
+
 - **`register<T>(name: string, injectionType: DependencyInjectionType, implementation: Constructor<T>)`** <br>
   Register a class with the IOC container. <br>
   _This method is automatically called when using @Singleton, @Transient or @Scoped_
 
-- **`Resolve<T>(token: string): T`** <br>
+- **`resolve<T>(token: string): T`** <br>
   Resolve a dependency from the IOC container. <br>
   Scoped and transient dependencies will be created when calling this method. <br>
   Singletons will automatically be stored in the container. <br>
@@ -221,6 +234,9 @@ The IOC Container (Inversion Of Control) controls all the dependencies. It allow
 
 In the implementation, the IOC Container has a map of the names and implementations. Because everything within the IOC Container is static, there is always only one instance of the container.
 
+Here is a flowchart of how the class decorator works. <br>
+<img src="./assets/flowchart-class-decorator.png" alt="Flowchart of the class decorator" height="250" />
+
 ### Singletons
 A singleton is a class that will only be created once. The same instance is used every time the dependency is resolved. Because of this, singletons can be used to store state.<br>
 When the IOC is requested to resolve a singleton, it will first look at the stored instances. If the instance is not found, a new instance will be created and stored.
@@ -232,6 +248,10 @@ The IOC provides a method to register a scope for a class instance. This scope c
 
 ## Injecting
 When a property in a class is labeled with the `Inject` decorator, the IOC will try to resolve the dependency when the property is accessed. The decorator will automatically call the Scope Manager when it detects a scoped dependency. The Scope Manager will then resolve the dependency within the scope.
+
+| What happens in the injector | What happens when resolving a dependency |
+| ----------------------------- | --------------------------------------- |
+| <img src="./assets/flowchart-property-decorator.png" alt="Flowchart of the property decorator" height="250" /> | <img src="./assets/flowchart-injection.png" alt="Flowchart of resolving an dependency" height="175" /> |
 
 ## Tokens
 Because of the limitations in JavaScript, the type of a property is not known in runtime. To solve this, a token is used to identify the class. When using `@Singleton`, `@Transient` or `@Scoped`, the class name is used as the token. Because of this, it's **not possible to have two classes with the same name**. The dependency injection system will throw an error when it detects two classes with the same name.
