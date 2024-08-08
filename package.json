@@ -1,0 +1,9 @@
+{
+  "name": "@examen-generqator/dependency-injection",
+  "version": "1.0.0",
+  "description": "This is a simple generic dependency injection system for TypeScript. It can be used in any TypeScript project.",
+  "main": "src/index.ts",
+  "scripts": {},
+  "author": "Examen Generator",
+  "private": true
+}
