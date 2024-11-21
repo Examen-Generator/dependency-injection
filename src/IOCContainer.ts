@@ -28,7 +28,11 @@ export default class IOCContainer {
     implementation: Constructor<T>
   ): void {
     // If there already is an implementation with the same token, throw an error
-    if (this.implementations.has(token)) {
+    if (
+      this.implementations.has(token) &&
+      // @ts-expect-error There are no types for global variables
+      typeof global.overrideSameInjections === "undefined"
+    ) {
       throw new DependencyInjectionError(
         `There already is a class named ${token} registered.`
       );
