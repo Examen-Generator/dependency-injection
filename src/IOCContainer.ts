@@ -22,14 +22,23 @@ export default class IOCContainer {
    * @param {Constructor<T>} implementation The class constructor to register.
    * @method IOCContainer#register
    */
-  public static register<T>(token: string, injectionType: DependencyInjectionType, implementation: Constructor<T>): void {
+  public static register<T>(
+    token: string,
+    injectionType: DependencyInjectionType,
+    implementation: Constructor<T>
+  ): void {
     // If there already is an implementation with the same token, throw an error
     if (this.implementations.has(token)) {
-      throw new DependencyInjectionError(`There already is a class named ${token} registered.`);
+      throw new DependencyInjectionError(
+        `There already is a class named ${token} registered.`
+      );
     }
 
     // Add the implementation
-    this.implementations.set(token, { injectionType, implementation });
+    this.implementations.set(token, {
+      injectionType,
+      implementation: <Constructor<{}>>implementation
+    });
   }
 
   /**
@@ -47,22 +56,29 @@ export default class IOCContainer {
 
     // Check if the constructor exists
     if (!injection) {
-      throw new DependencyInjectionError(`Class constructor for ${token} not found. Did you forget to add the @Singleton decorator to the class?`);
+      throw new DependencyInjectionError(
+        `Class constructor for ${token} not found. Did you forget to add the @Singleton decorator to the class?`
+      );
     }
 
     // If the type isn't singleton, create a new instance
     if (injection.injectionType !== "Singleton") {
-      return <T> new injection.implementation();
+      return <T>new injection.implementation();
     }
 
     // The type is singleton. There should only be one instance of the class.
     // If the instance doesn't exist yet, create a new instance
     try {
       if (!this.instances.has(injection.implementation)) {
-        this.instances.set(injection.implementation, new injection.implementation());
+        this.instances.set(
+          injection.implementation,
+          new injection.implementation()
+        );
       }
-    } catch(error) {
-      throw new DependencyInjectionError(`Failed to create an instance of ${token}. ${error.message}`);
+    } catch (error) {
+      throw new DependencyInjectionError(
+        `Failed to create an instance of ${token}. ${(<Error>error).message}`
+      );
     }
 
     // Return the instance
@@ -75,7 +91,9 @@ export default class IOCContainer {
    * @returns {DependencyInjectionType | null} The injection type of the dependency.
    * @method IOCContainer#getInjectionType
    */
-  public static getInjectionType(token: string): DependencyInjectionType | null {
+  public static getInjectionType(
+    token: string
+  ): DependencyInjectionType | null {
     return this.implementations.get(token)?.injectionType ?? null;
   }
 
@@ -92,7 +110,10 @@ export default class IOCContainer {
    * @param {(dependency: string) => any} resolve The resolve function to resolve the dependency
    * @method IOCContainer#registerScope
    */
-  public static registerScope(instance: any, resolve: (dependency: string) => any): void {
+  public static registerScope(
+    instance: any,
+    resolve: (dependency: string) => any
+  ): void {
     this.scopes.set(instance, resolve);
   }
 
@@ -142,7 +163,10 @@ export default class IOCContainer {
    * @returns {object} The result of the test. The object contains a boolean value and an array of errors.
    * @method IOCContainer#testDependencyReferences
    */
-  public static testDependencyReferences(): { valid: boolean, errors: string[] } {
+  public static testDependencyReferences(): {
+    valid: boolean;
+    errors: string[];
+  } {
     let valid = true;
     let errors: string[] = [];
 
@@ -152,7 +176,9 @@ export default class IOCContainer {
 
       // Check if the dependency is properly registered
       if (!dependency) {
-        errors.push(`${origin.constructor.name}: The dependency ${token} is not registered`);
+        errors.push(
+          `${origin.constructor.name}: The dependency ${token} is not registered`
+        );
         valid = false;
         continue;
       }
@@ -160,9 +186,13 @@ export default class IOCContainer {
       // A scoped dependency cannot be resolved from a non-scoped class
       // Get the injectionType of the origin
       if (dependency.injectionType === "Scoped") {
-        const originDependency = this.implementations.get(origin.constructor.name);
+        const originDependency = this.implementations.get(
+          origin.constructor.name
+        );
         if (originDependency && originDependency.injectionType !== "Scoped") {
-          errors.push(`${origin.constructor.name}: The scoped dependency ${token} cannot be resolved from a non-scoped class`);
+          errors.push(
+            `${origin.constructor.name}: The scoped dependency ${token} cannot be resolved from a non-scoped class`
+          );
           valid = false;
         }
       }
