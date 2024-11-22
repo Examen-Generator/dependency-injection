@@ -14,7 +14,7 @@ import IOCContainer from "../IOCContainer";
  */
 export default function Inject(dependency: string) {
   // Return a getter function that returns the class instance
-  return function(target: any, propertyKey: string) {
+  return function (target: any, propertyKey: string) {
     // Add the reference to the IOC container for testing purposes
     // With this, the IOC container is able to test if all dependencies are resolvable
     IOCContainer.addDependencyReference(dependency, target);
@@ -25,8 +25,10 @@ export default function Inject(dependency: string) {
         // Resolve the dependency from the IOC container
         // First, we try to resolve the dependency in the current scope
         // If it is not found, we try to resolve the dependency from the global scope
-        return IOCContainer.resolveScope(this, dependency)
-          ?? IOCContainer.resolve(dependency);
+        return (
+          IOCContainer.resolveScope(this, dependency) ??
+          IOCContainer.resolve(dependency)
+        );
       }
     });
   };

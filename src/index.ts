@@ -6,4 +6,11 @@ import Transient from "./decorators/Transient";
 import DependencyInjectionError from "./DependencyInjectionError";
 import IOCContainer from "./IOCContainer";
 
-export { Inject, Scoped, Singleton, Transient, DependencyInjectionError, IOCContainer };
+export {
+  Inject,
+  Scoped,
+  Singleton,
+  Transient,
+  DependencyInjectionError,
+  IOCContainer
+};

@@ -3,4 +3,5 @@ This is a quick example that uses `@Scoped`, `@Singleton` and `@Transient` decor
 For more information about the usage of this Dependency Injection library and how this implementation works, please refer to the [documentation](../README.md).
 
 ## Dependency tree
+
 ![](../assets/example-dependency-tree.png)

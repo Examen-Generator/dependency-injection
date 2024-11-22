@@ -18,7 +18,9 @@ import isClass from "../isClass";
 export default function Transient(implementation: any) {
   // Check if the implementation is a class
   if (!isClass(implementation)) {
-    throw new DependencyInjectionError(`Failed to register class definition for ${implementation.name}. The implementation is not a class.`);
+    throw new DependencyInjectionError(
+      `Failed to register class definition for ${implementation.name}. The implementation is not a class.`
+    );
   }
 
   // Register the class with the IOC container

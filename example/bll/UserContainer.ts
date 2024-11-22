@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 import { Inject, Scoped } from "../../src";
 import type { IUserContainer, User } from "../types/bll/IUserContainer";
 import type { IUserRepository } from "../types/db/IUserRepository";
@@ -8,7 +10,7 @@ export default class UserContainer implements IUserContainer {
   private userId?: number;
 
   constructor() {
-    console.log("  UserContainer created!")
+    console.log("  UserContainer created!");
   }
 
   public getUserById(id: string): User {
@@ -18,6 +20,6 @@ export default class UserContainer implements IUserContainer {
 
     return {
       id: (this.userId * 2).toString()
-    }
+    };
   }
 }

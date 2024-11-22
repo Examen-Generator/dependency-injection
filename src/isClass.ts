@@ -3,9 +3,11 @@
  * @param {any} value The value to check.
  * @returns {boolean} True if the value is a class; otherwise, false.
  */
-export default function isClass(value: any): value is new (...args: any[]) => any {
+export default function isClass(
+  value: any
+): value is new (...args: any[]) => any {
   // Check if value is a function
-  if (typeof value !== 'function') return false;
+  if (typeof value !== "function") return false;
 
   // Check if the function's prototype has a constructor
   if (!value.prototype) return false;

@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 // Import the classes used in DI
 import "./db/DbConnection";
 
@@ -10,7 +12,9 @@ import { IUserContainer } from "./types/bll/IUserContainer";
 // Tests if all the dependencies are registered correctly
 const testResult = IOCContainer.testDependencyReferences();
 if (!testResult.valid) {
-  throw new Error(`Found Dependency Injection errors!\n${testResult.errors.join("\n")}`);
+  throw new Error(
+    `Found Dependency Injection errors!\n${testResult.errors.join("\n")}`
+  );
 } else console.debug("All dependencies are registered correctly!");
 
 // Example of a request handler
