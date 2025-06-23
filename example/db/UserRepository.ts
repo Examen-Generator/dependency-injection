@@ -6,7 +6,7 @@ import type { IUserRepository, User } from "../types/db/IUserRepository";
 
 @Transient
 export default class UserRepository implements IUserRepository {
-  @Inject("DbConnection") private dbConnection: IDbConnection;
+  @Inject("DbConnection") private dbConnection!: IDbConnection;
 
   constructor() {
     console.log("  UserRepository created!");

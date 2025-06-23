@@ -7,7 +7,7 @@ import "./bll/UserContainer";
 import "./db/UserRepository";
 
 import { IOCContainer } from "../src";
-import { IUserContainer } from "./types/bll/IUserContainer";
+import type { IUserContainer } from "./types/bll/IUserContainer";
 
 // Tests if all the dependencies are registered correctly
 const testResult = IOCContainer.testDependencyReferences();

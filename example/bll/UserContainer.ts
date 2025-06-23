@@ -6,7 +6,7 @@ import type { IUserRepository } from "../types/db/IUserRepository";
 
 @Scoped
 export default class UserContainer implements IUserContainer {
-  @Inject("UserRepository") private userRepository: IUserRepository;
+  @Inject("UserRepository") private userRepository!: IUserRepository;
   private userId?: number;
 
   constructor() {
